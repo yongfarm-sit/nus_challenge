@@ -64,7 +64,7 @@ private function sendToLLM($csvContent)
             [
                 'parts' => [
                     [
-                        'text' => "Please analyze and summarize the following CSV data: " . $csvContent
+                        'text' => "You are a auditor, please analyze and summarize the following CSV data and check for any inconsistencies: " . $csvContent
                     ]
                 ]
             ]
