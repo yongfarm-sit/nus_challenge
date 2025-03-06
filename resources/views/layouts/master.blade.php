@@ -46,7 +46,7 @@
 								</div>
 							</div>
 						<a class="dropdown-item" href="settings.html">Account Settings</a> 
-						<a class="dropdown-item" href="{{ route('logout') }}"style="color: red;">Logout</a>
+						
         </div>
 				</li>
 			</ul>

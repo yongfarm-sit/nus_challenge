@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `tp_acc_erp`.`customer` (
 ENGINE = InnoDB
 AUTO_INCREMENT = 7
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 
 -- -----------------------------------------------------
@@ -128,8 +128,8 @@ CREATE TABLE IF NOT EXISTS `tp_acc_erp`.`customerinvoice` (
     REFERENCES `tp_acc_erp`.`customer` (`CustomerID`)
     ON DELETE CASCADE
 ) ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+DEFAULT CHARACTER SET = utf8mb4;
+
 
 
 

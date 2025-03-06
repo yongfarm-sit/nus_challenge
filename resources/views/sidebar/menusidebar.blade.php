@@ -68,6 +68,17 @@
                         <li><a class="{{ Request::is('financial-report/inventory') ? 'active' : '' }}" href="{{ route('financialreport.inventoryreport') }}">Inventory Report</a></li>
                     </ul>
                 </li>
+                <li class="submenu">
+                    <a href="#">
+                        <i class="fa fa-file-alt"></i>
+                        <span> Audit </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <ul class="submenu_class" style="display: none;">
+                        <li><a href="{{ route('audit.index') }}">Gen AI Audit</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>
