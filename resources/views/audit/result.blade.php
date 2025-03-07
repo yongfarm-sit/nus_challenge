@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSV Summary</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Marked.js -->
 </head>
 <body class="flex items-center justify-center min-h-screen bg-gray-100">
 
@@ -13,7 +14,7 @@
 
         <div class="bg-gray-50 p-4 rounded border">
             <h2 class="text-lg font-semibold text-gray-700">AI-Generated Summary:</h2>
-            <p class="text-gray-600 mt-2">{{ $summary }}</p>
+            <div id="summary" class="text-gray-600 mt-2"></div> <!-- This will hold formatted Markdown -->
         </div>
 
         <div class="text-center mt-6">
@@ -22,6 +23,12 @@
             </a>
         </div>
     </div>
+
+    <script>
+        let rawSummary = `{{ $summary }}`;
+        // Convert Markdown to HTML and display it
+        document.getElementById('summary').innerHTML = marked.parse(rawSummary);
+    </script>
 
 </body>
 </html>

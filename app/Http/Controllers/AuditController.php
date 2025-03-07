@@ -56,7 +56,7 @@ private function sendToLLM($csvContent)
     $apiKey = env('YOUR_GOOGLE_API_KEY'); // Make sure to store your Google API key in the .env file
 
     // Define the URL for the Gemini API request
-    $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . $apiKey;
+    $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=' . $apiKey;
 
     // Define the data to send, including CSV content
     $data = [
@@ -64,7 +64,14 @@ private function sendToLLM($csvContent)
             [
                 'parts' => [
                     [
-                        'text' => "You are a auditor, please analyze and summarize the following CSV data and check for any inconsistencies: " . $csvContent
+                        'text' => "You are an auditor. Analyze and summarize the following CSV data. 
+                        - Do not include introduction.
+                        - Use `##` for section titles.
+                        - Identify key insights. 
+                        - List any inconsistencies or errors. 
+                        - Format the output in Markdown, using `- ` for bullet points and separating each point with a blank line.
+                        CSV Data:
+                        " . $csvContent
                     ]
                 ]
             ]
