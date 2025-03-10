@@ -107,9 +107,6 @@ class AuditController extends Controller
 //     }
 // }
 
-
-use Illuminate\Support\Facades\Http;
-
 private function sendToLLM($csvContent)
 {
     $apiKey = env('AZURE_OPENAI_API_KEY'); // Store your Azure OpenAI API key in the .env file
