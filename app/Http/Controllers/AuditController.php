@@ -51,41 +51,104 @@ class AuditController extends Controller
 }
 
 
+// private function sendToLLM($csvContent)
+// {
+//     $apiKey = env('YOUR_GOOGLE_API_KEY'); // Make sure to store your Google API key in the .env file
+
+//     // Define the URL for the Gemini API request
+//     $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=' . $apiKey;
+
+//     // Define the data to send, including CSV content
+//     $data = [
+//         'contents' => [
+//             [
+//                 'parts' => [
+//                     [
+//                         'text' => "You are an auditor. Analyze and summarize the following CSV data. 
+//                         - Do not include introduction.
+//                         - Use `##` for section titles.
+//                         - Identify key insights. 
+//                         - List any inconsistencies or errors. 
+//                         - Format the output in Markdown, using `- ` for bullet points and separating each point with a blank line.
+//                         CSV Data:
+//                         " . $csvContent
+//                     ]
+//                 ]
+//             ]
+//         ]
+//     ];
+
+//     // Make the POST request using Laravel's HTTP client
+//     $response = Http::withHeaders([
+//         'Content-Type' => 'application/json',
+//     ])->post($url, $data);
+
+//     // Check if the response failed
+//     if ($response->failed()) {
+//         \Log::error('Google Gemini API Request Failed:', [
+//             'status' => $response->status(),
+//             'response_body' => $response->body(),
+//         ]);
+//         return null; // Handle failure appropriately
+//     }
+
+//     // Get the response body as JSON
+//     $responseJson = $response->json();
+
+//     // Log the response to inspect its structure
+//     \Log::info('Google Gemini API Response:', $responseJson);
+
+//     // Extract the summary from the 'candidates' field
+//     if (isset($responseJson['candidates'][0]['content']['parts'][0]['text'])) {
+//         return $responseJson['candidates'][0]['content']['parts'][0]['text']; // Return the generated summary content
+//     } else {
+//         \Log::error('Google Gemini API Response Error:', $responseJson);
+//         return null; // Return null if no valid response found
+//     }
+// }
+
+
+use Illuminate\Support\Facades\Http;
+
 private function sendToLLM($csvContent)
 {
-    $apiKey = env('YOUR_GOOGLE_API_KEY'); // Make sure to store your Google API key in the .env file
+    $apiKey = env('AZURE_OPENAI_API_KEY'); // Store your Azure OpenAI API key in the .env file
+    $apiEndpoint = env('AZURE_OPENAI_ENDPOINT'); // Example: https://your-resource-name.openai.azure.com/
+    $deploymentId = env('AZURE_OPENAI_DEPLOYMENT'); // Example: gpt-4-turbo
 
-    // Define the URL for the Gemini API request
-    $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=' . $apiKey;
+    // Define the URL for Azure OpenAI API request
+    $url = "{$apiEndpoint}/openai/deployments/{$deploymentId}/chat/completions?api-version=2024-02-01";
 
-    // Define the data to send, including CSV content
+    // Define the data to send
     $data = [
-        'contents' => [
+        'messages' => [
             [
-                'parts' => [
-                    [
-                        'text' => "You are an auditor. Analyze and summarize the following CSV data. 
-                        - Do not include introduction.
-                        - Use `##` for section titles.
-                        - Identify key insights. 
-                        - List any inconsistencies or errors. 
-                        - Format the output in Markdown, using `- ` for bullet points and separating each point with a blank line.
-                        CSV Data:
-                        " . $csvContent
-                    ]
-                ]
+                'role' => 'system',
+                'content' => "You are an auditor. Analyze and summarize the following CSV data. 
+                - Do not include introduction.
+                - Use `##` for section titles.
+                - Identify key insights. 
+                - List any inconsistencies or errors. 
+                - Format the output in Markdown, using `- ` for bullet points and separating each point with a blank line."
+            ],
+            [
+                'role' => 'user',
+                'content' => "CSV Data:\n" . $csvContent
             ]
-        ]
+        ],
+        'temperature' => 0.2,
+        'max_tokens' => 1000
     ];
 
     // Make the POST request using Laravel's HTTP client
     $response = Http::withHeaders([
         'Content-Type' => 'application/json',
+        'api-key' => $apiKey,
     ])->post($url, $data);
 
     // Check if the response failed
     if ($response->failed()) {
-        \Log::error('Google Gemini API Request Failed:', [
+        \Log::error('Azure OpenAI API Request Failed:', [
             'status' => $response->status(),
             'response_body' => $response->body(),
         ]);
@@ -96,17 +159,16 @@ private function sendToLLM($csvContent)
     $responseJson = $response->json();
 
     // Log the response to inspect its structure
-    \Log::info('Google Gemini API Response:', $responseJson);
+    \Log::info('Azure OpenAI API Response:', $responseJson);
 
-    // Extract the summary from the 'candidates' field
-    if (isset($responseJson['candidates'][0]['content']['parts'][0]['text'])) {
-        return $responseJson['candidates'][0]['content']['parts'][0]['text']; // Return the generated summary content
+    // Extract the summary from the response
+    if (isset($responseJson['choices'][0]['message']['content'])) {
+        return $responseJson['choices'][0]['message']['content']; // Return the generated summary
     } else {
-        \Log::error('Google Gemini API Response Error:', $responseJson);
+        \Log::error('Azure OpenAI API Response Error:', $responseJson);
         return null; // Return null if no valid response found
     }
 }
-
 
     
     
