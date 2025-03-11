@@ -6,7 +6,7 @@ Ensure you have **Node.js** installed on your system.
 
 ## Install dependencies
 
-npm install express axios multer csv-parser dotenv
+npm install express axios multer csv-parser dotenv streamifier marked
 
 ## Modify env
 
