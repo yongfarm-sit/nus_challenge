@@ -62,6 +62,8 @@ def process_text_with_openai(text):
         Use `##` for section titles.  
         List and identify any inconsistencies or errors.
         Specifically highly the inconsistencies and errors to make them more eye catching and state which standard it is failing
+        Do calculations using Wolframe Alpha
+        Correct any inconsistencies and errors and provide the calculations with the specific formulas.
         Format the output in markdown"""},
         {"role": "user", "content": text}
     ]
